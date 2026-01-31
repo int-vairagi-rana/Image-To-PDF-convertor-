@@ -8,13 +8,13 @@ let draggedIndex = null;
 let cropIndex = null;
 let cropImg = new Image();
 
-
+// ---------------- LOGIN TOGGLE ----------------
 document.getElementById("loginBtn").onclick = toggleLogin;
 
 function toggleLogin() {
   loginBox.style.display =
     loginBox.style.display === "block" ? "none" : "block";
-};
+}
 
 document.addEventListener("click", function (e) {
   const loginBtn = document.getElementById("loginBtn");
@@ -24,7 +24,38 @@ document.addEventListener("click", function (e) {
   }
 });
 
+// ---------------- LOGIN LOGIC ----------------
+const loginSubmit = document.getElementById("loginSubmit");
+const loginMessage = document.getElementById("loginMessage");
 
+let users = [];
+
+loginSubmit.addEventListener("click", function () {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (username === "" || password === "") {
+    loginMessage.textContent = "Please enter username and password";
+    loginMessage.style.color = "red";
+    return;
+  }
+
+  users.push({ username, password });
+  console.log(users);
+
+  loginMessage.textContent = "Login successful ✅";
+  loginMessage.style.color = "green";
+
+  setTimeout(() => {
+    loginBox.style.display = "none";
+    loginMessage.textContent = "";
+  }, 1200);
+
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+});
+
+// ---------------- IMAGE UPLOAD ----------------
 imageInput.addEventListener("change", function (e) {
   const files = Array.from(e.target.files);
 
@@ -39,7 +70,6 @@ imageInput.addEventListener("change", function (e) {
   });
 });
 
-
 function renderImages() {
   preview.innerHTML = "";
 
@@ -52,7 +82,7 @@ function renderImages() {
       <img src="${img}">
       <div class="card-actions">
         <button onclick="openCrop(${index})">Crop</button>
-        <button onclick="deleteImage(${index})">Delete</button>
+        <button onclick="deleteImage(${index})">✕</button>
       </div>
     `;
 
@@ -68,19 +98,17 @@ function renderImages() {
   });
 }
 
-
 function deleteImage(index) {
   images.splice(index, 1);
   renderImages();
 }
-
 
 function clearImages() {
   images = [];
   preview.innerHTML = "";
 }
 
-
+// ---------------- CROP ----------------
 function openCrop(index) {
   cropIndex = index;
   cropImg.src = images[index];
@@ -107,7 +135,7 @@ function closeCrop() {
   document.getElementById("cropBox").style.display = "none";
 }
 
-
+// ---------------- PDF ----------------
 function convertToPDF() {
   if (images.length === 0) {
     message.textContent = "Please upload images before converting.";
