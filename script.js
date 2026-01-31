@@ -9,20 +9,28 @@ let cropIndex = null;
 let cropImg = new Image();
 
 // ---------------- LOGIN TOGGLE ----------------
-document.getElementById("loginBtn").onclick = toggleLogin;
-
 function toggleLogin() {
-  loginBox.style.display =
-    loginBox.style.display === "block" ? "none" : "block";
+  const isVisible = window.getComputedStyle(loginBox).display === "block";
+  loginBox.style.display = isVisible ? "none" : "block";
 }
 
-document.addEventListener("click", function (e) {
-  const loginBtn = document.getElementById("loginBtn");
+const loginBtn = document.getElementById("loginBtn");
 
-  if (!loginBox.contains(e.target) && e.target !== loginBtn) {
-    loginBox.style.display = "none";
-  }
+loginBtn.addEventListener("click", function (e) {
+  e.stopPropagation();       
+  toggleLogin();
 });
+
+loginBox.addEventListener("click", function (e) {
+  e.stopPropagation();        
+});
+
+document.addEventListener("click", function () {
+  loginBox.style.display = "none"; 
+});
+
+
+
 
 // ---------------- LOGIN LOGIC ----------------
 const loginSubmit = document.getElementById("loginSubmit");
